@@ -1,11 +1,13 @@
 let { DIDDocument } = require('did-document');
 
-DIDDocument.load = function(did) {
-    console.log(did);
+DIDDocument.prototype.load = async function(did) {
+    // TODO: Load DID document from server
+    return true;
 }
 
-DIDDocument.commit = function(didDocument) {
-    console.log(didDocument);
+DIDDocument.prototype.commit = async function(didDocument) {
+    // TODO: Save DID document to server
+    return true;
 }
 
 export default DIDDocument;
