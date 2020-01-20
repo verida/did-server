@@ -4,6 +4,7 @@
   "description": "Verida DID document",
   "main": "src/DidDocument.js",
   "scripts": {
+    "test": "mocha -mocha --require @babel/polyfill --require @babel/register './test/**/*.js'"
   },
   "repository": {
     "type": "git",
@@ -14,5 +15,18 @@
   "bugs": {
     "url": "https://github.com/verida/did-document/issues"
   },
-  "homepage": "https://github.com/verida/did-document#readme"
+  "homepage": "https://github.com/verida/did-document#readme",
+  "dependencies": {
+    "did-document": "^0.6.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.3",
+    "@babel/node": "^7.8.3",
+    "@babel/polyfill": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.6",
+    "babel-register": "^6.26.0",
+    "mocha": "^7.0.0"
+  }
 }
