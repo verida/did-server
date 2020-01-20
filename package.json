@@ -1,0 +1,18 @@
+{
+  "name": "verida-did-document",
+  "version": "0.0.1",
+  "description": "Verida DID document",
+  "main": "src/DidDocument.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/verida/did-document.git"
+  },
+  "author": "Verida",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/verida/did-document/issues"
+  },
+  "homepage": "https://github.com/verida/did-document#readme"
+}
