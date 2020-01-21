@@ -1,1 +1,8 @@
-Verida DID Document implementation
+Verida DID Document implementation.
+
+Supports:
+
+- load()
+- commit()
+- verifyProof()
+- createProof()
