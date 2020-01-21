@@ -1,5 +1,5 @@
 {
-  "name": "verida-did-document",
+  "name": "@verida/did-document",
   "version": "0.0.1",
   "description": "Verida DID document",
   "main": "src/DidDocument.js",
