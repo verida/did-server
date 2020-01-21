@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/verida/did-document#readme",
   "dependencies": {
+    "axios": "^0.19.1",
     "did-document": "^0.6.2"
   },
   "devDependencies": {

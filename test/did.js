@@ -1,14 +1,14 @@
 const assert = require("assert");
 import DIDDocument from '../src/DidDocument';
 
-describe('DID', function() {
-    describe('Document', function() {
-        this.beforeAll(function() {
+describe('DID', async function() {
+    describe('Document', async function() {
+        this.beforeAll(async function() {
         });
 
         var did = 'did:veri:0x2e922f72f4f1a27701dde0627dfd693376ab0d02';
         
-        it('should create DID with public key and save to server', function() {
+        it('should create DID with public key and save to server', async function() {
             let publicKeys = {
                 asym: "a651b53d6688935c00d5b1035087eae1f44afcaafbd9805b023c392fa3dd3808",
                 sign: "f7e03208c6f4de184a8db90d24fb8c3171dc417499ae453da4e4108edf9d717b",
@@ -50,8 +50,7 @@ describe('DID', function() {
                 description: 'Verida Demo Application'
             });
 
-            let result = doc.commit(doc);
-
+            let result = await doc.commit(doc);
             assert(result,true);
         });
 
@@ -60,10 +59,13 @@ describe('DID', function() {
                 did: did
             });
 
-            doc.load();
+            let serverDoc = await doc.load();
 
-            // TODO:
-            assert(true,true);
+            if (!serverDoc) {
+                assert(true,false);
+            }
+
+            assert(serverDoc.id == did, true);
         })
     })
 });
