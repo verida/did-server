@@ -1,7 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import router from './routes/index.js';
+import router from './routes.js';
+import DbManager from './dbManager';
 require('dotenv').config();
 
 const basicAuth = require('express-basic-auth');
@@ -18,6 +19,8 @@ app.use(cors(corsConfig));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(router);
+
+DbManager.ensureDb();
 
 const PORT = 5001;
 app.listen(PORT, () => {

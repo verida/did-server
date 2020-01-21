@@ -4,7 +4,7 @@
   "description": "Verida DID Server",
   "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon --exec babel-node src/server.js"
   },
   "repository": {
     "type": "git",
@@ -25,5 +25,11 @@
     "express-basic-auth": "^1.2.0",
     "nano": "^8.1.0",
     "nodemon": "^2.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.3",
+    "@babel/node": "^7.8.3",
+    "@babel/polyfill": "^7.8.3",
+    "@babel/preset-env": "^7.8.3"
   }
 }
