@@ -3,19 +3,16 @@ import DIDDocument from '../src/DidDocument';
 
 describe('DID', async function() {
     describe('Document', async function() {
-        this.beforeAll(async function() {
-        });
+        let doc;
 
-        var did = 'did:veri:0x2e922f72f4f1a27701dde0627dfd693376ab0d02';
-        
-        it('should create DID with public key and save to server', async function() {
+        this.beforeAll(async function() {
             let publicKeys = {
                 asym: "a651b53d6688935c00d5b1035087eae1f44afcaafbd9805b023c392fa3dd3808",
                 sign: "f7e03208c6f4de184a8db90d24fb8c3171dc417499ae453da4e4108edf9d717b",
                 auth: "84faffe8e5fb67e084e6032ee7313c2645119bffbc61d57525d2c92f02afa14f"
             }
 
-            let doc = new DIDDocument({
+            doc = new DIDDocument({
                 did: did
             });
 
@@ -50,6 +47,11 @@ describe('DID', async function() {
                 description: 'Verida Demo Application'
             });
 
+        });
+
+        var did = 'did:veri:0x2e922f72f4f1a27701dde0627dfd693376ab0d02';
+        
+        it('should create DID with public key and save to server', async function() {
             let result = await doc.commit(doc);
             assert(result,true);
         });
@@ -66,6 +68,12 @@ describe('DID', async function() {
             }
 
             assert(serverDoc.id == did, true);
+        });
+
+        it('should create a valid JWT proof', async function() {
+            let privateSignKey = "a8fcc1e509786771d02d36103c3c4ce8e4fe741d2a095a395d7e08b2ae15cbb4f7e03208c6f4de184a8db90d24fb8c3171dc417499ae453da4e4108edf9d717b";
+            doc.createProof(privateSignKey);
+            assert(doc.verifyProof(), true);
         })
     })
 });
