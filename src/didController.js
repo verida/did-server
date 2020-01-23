@@ -1,6 +1,6 @@
-let { DIDDocument } = require('did-document');
 import DbManager from './dbManager';
-import Utils from './utils';
+import DIDDocument from 'did-document';
+import DIDHelper from '@verida/did-helper';
 
 class DidController {
 
@@ -31,12 +31,13 @@ class DidController {
     }
 
     async commit(req, res) {
-        let doc = req.body.params.document;
+        let document = req.body.params.document;
+        let doc = new DIDDocument(document, document['@context']);
 
-        if (!Utils.verifyDoc(doc)) {
+        if (!(DIDHelper.verifyProof(doc))) {
             return res.status(400).send({
                 status: "fail",
-                message: "Invalid document signature"
+                message: "Invalid DID signature"
             });
         }
 

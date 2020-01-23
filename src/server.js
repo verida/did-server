@@ -1,11 +1,11 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import router from './routes.js';
+import router from './routes';
 import DbManager from './dbManager';
-require('dotenv').config();
 
-const basicAuth = require('express-basic-auth');
+import dotenv from 'dotenv';
+dotenv.config();
 
 // Set up the express app
 const app = express();

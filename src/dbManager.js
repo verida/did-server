@@ -1,4 +1,4 @@
-const CouchDb = require('nano');
+import CouchDb from 'nano';
 
 class DbManager {
 

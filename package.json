@@ -3,8 +3,10 @@
   "version": "0.0.1",
   "description": "Verida DID Server",
   "main": "src/server.js",
+  "type": "module",
   "scripts": {
-    "start": "nodemon --exec babel-node src/server.js"
+    "start": "nodemon --exec babel-node src/server.js",
+    "hello": "babel-node src/server.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +19,7 @@
   },
   "homepage": "https://github.com/verida/did-server#readme",
   "dependencies": {
+    "@verida/did-helper": "^0.2.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "did-document": "^0.6.2",
