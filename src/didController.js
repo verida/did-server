@@ -1,5 +1,5 @@
 import DbManager from './dbManager';
-import DIDDocument from 'did-document';
+import { DIDDocument } from 'did-document';
 import DIDHelper from '@verida/did-helper';
 
 class DidController {
