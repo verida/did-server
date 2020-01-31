@@ -1,4 +1,5 @@
 import CouchDb from 'nano';
+import crypto from 'crypto';
 
 class DbManager {
 
@@ -11,7 +12,7 @@ class DbManager {
      */
     async saveDoc(doc) {
         let couch = this._getCouch();
-        let db = couch.db.use(process.env.DB_NAME);
+        let db = couch.db.use(process.env.DB_DOC_NAME);
 
         let data = {
             "_id": doc.id,
@@ -33,20 +34,60 @@ class DbManager {
             }
         }
 
-        return await db.insert(data);
+        let response = await db.insert(data);
+        return response;
     }
 
     /**
-     * Load a document from  the database
+     * Load a document from the database
      * 
      * @param {string} did 
      */
     async loadDoc(did) {
         let couch = this._getCouch();
-        let db = couch.db.use(process.env.DB_NAME);
+        let db = couch.db.use(process.env.DB_DOC_NAME);
 
-        let response = await db.get(did);
-        return response;
+        return await db.get(did);
+    }
+
+    async lookupForApp(did, appName) {
+        let couch = this._getCouch();
+        let db = couch.db.use(process.env.DB_LOOKUP_NAME);
+        let hash = this._buildHash(did, appName);
+        return await db.get(hash);
+    }
+
+    async saveLookup(did, doc) {
+        let couch = this._getCouch();
+        let db = couch.db.use(process.env.DB_LOOKUP_NAME);
+
+        let appService = doc.service.find(entry => entry.type.includes('verida.Application'));
+        let appName = appService.description;
+        let hash = this._buildHash(did, appName);
+
+        let data = {
+            "_id": hash,
+            "application": appName,
+            "did": did
+        };
+
+        // try to find the existing doc
+        try {
+            let existingDoc = await db.get(data._id);
+
+            if (existingDoc) {
+                data._rev = existingDoc._rev;
+            }
+        } catch (err) {
+            // Document may not be found, so continue
+            if (err.error != 'not_found') {
+                // If an unknown error, then send to error log
+                console.error(err);
+            }
+        }
+
+        let response = await db.insert(data);
+        return true;
     }
 
     /**
@@ -54,14 +95,14 @@ class DbManager {
      * 
      * (Executed on server startup)
      */
-    async ensureDb() {
+    async ensureDb(dbName) {
         let couch = this._getCouch();
         
         try {
-            let response = await ouch.db.create(process.env.DB_NAME);
-            console.log("Created database");
+            let response = await couch.db.create(dbName);
+            console.log("Created database: "+dbName);
         } catch (err) {
-            console.log("Database existed");
+            console.log("Database existed: "+dbName);
         }
 
         return true;
@@ -83,6 +124,13 @@ class DbManager {
     buildDsn(username, password) {
         let env = process.env;
         return env.DB_PROTOCOL + "://" + username + ":" + password + "@" + env.DB_HOST + ":" + env.DB_PORT;
+    }
+
+    _buildHash(did, appName) {
+        let hash = crypto.createHmac('sha256', process.env.HASH);
+        hash.update(did + appName);
+
+        return hash.digest('hex');
     }
 
 }

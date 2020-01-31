@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.post('/commit', DidController.commit);
 router.get('/load', DidController.load);
+router.get('/loadForApp', DidController.loadForApp);
 
 export default router;
