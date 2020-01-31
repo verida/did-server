@@ -5,10 +5,10 @@ import DIDHelper from '@verida/did-helper';
 class DidController {
 
     async load(req, res) {
-        let did = req.query.did;
+        let vid = req.query.vid;
 
         try {
-            let doc = await DbManager.loadDoc(did);
+            let doc = await DbManager.loadDoc(vid);
 
             return res.status(200).send({
                 status: "success",
@@ -21,7 +21,7 @@ class DidController {
                 return res.status(400).send({
                     status: "fail",
                     data: {
-                        did: "Invalid DID or not found"
+                        did: "Invalid VID or not found"
                     }
                 });
             }
@@ -31,13 +31,14 @@ class DidController {
     }
 
     async loadForApp(req, res) {
-        let did = req.query.userDid;
+        let did = req.query.did;
         let appName = req.query.appName;
+        console.log(req.query);
 
         try {
             let lookup = await DbManager.lookupForApp(did, appName);
-            let vid = lookup.did;
-            let doc = await DbManager.loadDoc(did);
+            let vid = lookup.vid;
+            let doc = await DbManager.loadDoc(vid);
 
             return res.status(200).send({
                 status: "success",
@@ -46,7 +47,7 @@ class DidController {
                 }
             });
         } catch (err) {
-            if (err.reason == "missing") {
+            if (err.error == "not_found") {
                 return res.status(400).send({
                     status: "fail",
                     data: {

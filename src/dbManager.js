@@ -15,8 +15,8 @@ class DbManager {
         let db = couch.db.use(process.env.DB_DOC_NAME);
 
         let data = {
-            "_id": doc.id,
-            "doc": doc
+            _id: doc.id,
+            doc: doc
         };
 
         // try to find the existing doc
@@ -41,13 +41,13 @@ class DbManager {
     /**
      * Load a document from the database
      * 
-     * @param {string} did 
+     * @param {string} vid 
      */
-    async loadDoc(did) {
+    async loadDoc(vid) {
         let couch = this._getCouch();
         let db = couch.db.use(process.env.DB_DOC_NAME);
 
-        return await db.get(did);
+        return await db.get(vid);
     }
 
     async lookupForApp(did, appName) {
@@ -66,10 +66,12 @@ class DbManager {
         let hash = this._buildHash(did, appName);
 
         let data = {
-            "_id": hash,
-            "application": appName,
-            "did": did
+            _id: hash,
+            application: appName,
+            did: did,
+            vid: doc.id
         };
+        console.log(data);
 
         // try to find the existing doc
         try {
