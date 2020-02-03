@@ -71,7 +71,6 @@ class DbManager {
             did: did,
             vid: doc.id
         };
-        console.log(data);
 
         // try to find the existing doc
         try {
