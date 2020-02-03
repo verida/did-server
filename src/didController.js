@@ -33,7 +33,6 @@ class DidController {
     async loadForApp(req, res) {
         let did = req.query.did;
         let appName = req.query.appName;
-        console.log(req.query);
 
         try {
             let lookup = await DbManager.lookupForApp(did, appName);
