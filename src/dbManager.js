@@ -57,6 +57,26 @@ class DbManager {
         return await db.get(hash);
     }
 
+    /**
+     * Get a DID from a VID
+     * 
+     * @param {*} did 
+     * @param {*} appName 
+     */
+    async getDidFromVid(vid) {
+        let couch = this._getCouch();
+        let db = couch.db.use(process.env.DB_LOOKUP_NAME);
+        let result = await db.find({
+            selector: {
+                vid: vid
+            }
+        });
+
+        if (result.docs.length) {
+            return result.docs[0].did;
+        }
+    }
+
     async saveLookup(did, doc) {
         let couch = this._getCouch();
         let db = couch.db.use(process.env.DB_LOOKUP_NAME);
@@ -105,6 +125,24 @@ class DbManager {
         } catch (err) {
             console.log("Database existed: "+dbName);
         }
+
+        if (dbName == process.env.DB_LOOKUP_NAME) {
+            let db = couch.db.use(process.env.DB_LOOKUP_NAME);
+            await db.createIndex({
+                index: {
+                    fields: ["vid"]
+                },
+                name: "vid"
+            });
+            await db.createIndex({
+                index: {
+                    fields: ["did", "application"]
+                },
+                name: "did-application"
+            });
+        }
+
+        
 
         return true;
     }

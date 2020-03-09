@@ -4,6 +4,11 @@ import DIDHelper from '@verida/did-helper';
 
 class DidController {
 
+    /**
+     * Load a VID document from a VID
+     * @param {*} req 
+     * @param {*} res 
+     */
     async load(req, res) {
         let vid = req.query.vid;
 
@@ -30,6 +35,11 @@ class DidController {
         }
     }
 
+    /**
+     * Load a VID document from a DID and Application name
+     * @param {*} req 
+     * @param {*} res 
+     */
     async loadForApp(req, res) {
         let did = req.query.did;
         let appName = req.query.appName;
@@ -59,6 +69,40 @@ class DidController {
         }
     }
 
+    /**
+     * Get the DID associated with a VID
+     * 
+     * @param {*} req 
+     * @param {*} res 
+     */
+    async getDidFromVid(req, res) {
+        let vid = req.query.vid;
+
+            let did = await DbManager.getDidFromVid(vid);
+
+        if (did) {
+            res.status(200).send({
+                status: "success",
+                data: {
+                    did: did
+                }
+            });
+        } else {
+            return res.status(400).send({
+                status: "fail",
+                data: {
+                    did: "Invalid VID or not found"
+                }
+            });
+        }
+    }
+
+    /**
+     * Save a VID document
+     * 
+     * @param {*} req 
+     * @param {*} res 
+     */
     async commit(req, res) {
         let document = req.body.params.document;
         let publicDid = req.body.params.did;
@@ -87,7 +131,6 @@ class DidController {
                 message: err.reason
             });
         }
-
     }
 
 }
