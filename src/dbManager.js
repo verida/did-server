@@ -112,6 +112,56 @@ class DbManager {
     }
 
     /**
+     * Link a username to an `ethr` or `vet` DID
+     * 
+     * @param {*} username Username to be linked to the DID
+     * @param {*} did DID to be linked to the username
+     * @param {*} sig Signature of the string `Setting username to <username>` signed by the address
+     */
+    async commitUsername(username, did, sig) {
+        // @todo add validation of username (lowercase, _, -, az09)
+
+        username = username.toLowerCase();
+        did = did.toLowerCase();
+
+        let couch = this._getCouch();
+        let db = couch.db.use(process.env.DB_USERNAME_NAME);
+        let regex = /^did\:(ethr|vet)/i;
+
+        if (!regex.exec(did)) {
+            throw new Error("Invalid DID: Must be an Ethereum or Vechain DID.");
+        }
+
+        let data = {
+            _id: username,
+            did: did,
+            proof: sig
+        }
+
+        // Delete the username for this DID if it already exists
+        let result = await db.find({
+            selector: {
+                did: did
+            }
+        });
+
+        if (result.docs.length) {
+            await db.destroy(result.docs[0]._id, result.docs[0]._rev);
+        }
+
+        // Link username and DID
+        return db.insert(data);
+    }
+
+    async getDidFromUsername(username) {
+        username = username.toLowerCase();
+
+        let couch = this._getCouch();
+        let db = couch.db.use(process.env.DB_USERNAME_NAME);
+        return db.get(username);
+    }
+
+    /**
      * Ensure the DID Document Database exists
      * 
      * (Executed on server startup)
@@ -120,7 +170,7 @@ class DbManager {
         let couch = this._getCouch();
         
         try {
-            let response = await couch.db.create(dbName);
+            await couch.db.create(dbName);
             console.log("Created database: "+dbName);
         } catch (err) {
             console.log("Database existed: "+dbName);
@@ -142,7 +192,15 @@ class DbManager {
             });
         }
 
-        
+        if (dbName == process.env.DB_USERNAME_NAME) {
+            let db = couch.db.use(process.env.DB_USERNAME_NAME);
+            await db.createIndex({
+                index: {
+                    fields: ["did"]
+                },
+                name: "did"
+            });
+        }
 
         return true;
     }
