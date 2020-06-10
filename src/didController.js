@@ -78,7 +78,7 @@ class DidController {
     async getDidFromVid(req, res) {
         let vid = req.query.vid;
 
-            let did = await DbManager.getDidFromVid(vid);
+        let did = await DbManager.getDidFromVid(vid);
 
         if (did) {
             res.status(200).send({
@@ -105,13 +105,27 @@ class DidController {
      */
     async commit(req, res) {
         let document = req.body.params.document;
-        let publicDid = req.body.params.did;
+        let publicDid = req.body.params.did.toLowerCase();
+        let signature = req.body.params.signature;
+
         let doc = new DIDDocument(document, document['@context']);
 
-        if (!(DIDHelper.verifyProof(doc))) {
+        let applicationService = doc.service.find(entry => entry.type.includes("verida.Application"));
+        let appName = applicationService.description;
+
+        let validSig = await DidController.verifyAppSignature(appName, publicDid, signature);
+
+        if (!validSig) {
             return res.status(400).send({
                 status: "fail",
-                message: "Invalid DID signature"
+                message: "Invalid DID consent signature"
+            });
+        }
+
+        if (!DIDHelper.verifyProof(doc)) {
+            return res.status(400).send({
+                status: "fail",
+                message: "Invalid DID document signature"
             });
         }
 
@@ -131,6 +145,11 @@ class DidController {
                 message: err.reason
             });
         }
+    }
+
+    static async verifyAppSignature(appName, did, signature) {
+        let message = "Do you approve access to view and update \""+appName+"\"?\n\n" + did;
+        return DIDHelper.verifySignedMessage(did, message, signature);
     }
 
 }
