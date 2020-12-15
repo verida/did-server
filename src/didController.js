@@ -1,62 +1,37 @@
 import DbManager from './dbManager';
 import { DIDDocument } from 'did-document';
-import DIDHelper from '@verida/did-helper';
 
 class DidController {
 
     /**
-     * Load a VID document from a VID
+     * Load a DID document from a DID
+     * 
      * @param {*} req 
      * @param {*} res 
      */
     async load(req, res) {
-        let vid = req.query.vid;
+        let did = req.query.did;
 
         try {
-            let doc = await DbManager.loadDoc(vid);
-
-            return res.status(200).send({
-                status: "success",
-                data: {
-                    document: doc.doc
-                }
-            });
-        } catch (err) {
-            if (err.reason == "missing") {
+            let doc = await DbManager.loadDoc(did);
+            
+            if (doc) {
+                return res.status(200).send({
+                    status: "success",
+                    data: {
+                        document: doc.doc
+                    }
+                })
+            } else {
                 return res.status(400).send({
                     status: "fail",
                     data: {
-                        did: "Invalid VID or not found"
+                        did: "Invalid DID or not found"
                     }
                 });
             }
-
-            throw err;
-        }
-    }
-
-    /**
-     * Load a VID document from a DID and Application name
-     * @param {*} req 
-     * @param {*} res 
-     */
-    async loadForApp(req, res) {
-        let did = req.query.did;
-        let appName = req.query.appName;
-
-        try {
-            let lookup = await DbManager.lookupForApp(did, appName);
-            let vid = lookup.vid;
-            let doc = await DbManager.loadDoc(vid);
-
-            return res.status(200).send({
-                status: "success",
-                data: {
-                    document: doc.doc
-                }
-            });
         } catch (err) {
-            if (err.error == "not_found") {
+            if (err.reason == "missing") {
                 return res.status(400).send({
                     status: "fail",
                     data: {
@@ -70,35 +45,7 @@ class DidController {
     }
 
     /**
-     * Get the DID associated with a VID
-     * 
-     * @param {*} req 
-     * @param {*} res 
-     */
-    async getDidFromVid(req, res) {
-        let vid = req.query.vid;
-
-        let did = await DbManager.getDidFromVid(vid);
-
-        if (did) {
-            res.status(200).send({
-                status: "success",
-                data: {
-                    did: did
-                }
-            });
-        } else {
-            return res.status(400).send({
-                status: "fail",
-                data: {
-                    did: "Invalid VID or not found"
-                }
-            });
-        }
-    }
-
-    /**
-     * Save a VID document
+     * Save a DID document
      * 
      * @param {*} req 
      * @param {*} res 
@@ -110,7 +57,7 @@ class DidController {
 
         let doc = new DIDDocument(document, document['@context']);
 
-        let applicationService = doc.service.find(entry => entry.type.includes("verida.Application"));
+        let applicationService = doc.service.find(entry => entry.type.includes("verida.StorageServer"));
         let appName = applicationService.description;
 
         let validSig = await DidController.verifyAppSignature(appName, publicDid, signature);
@@ -122,16 +69,16 @@ class DidController {
             });
         }
 
-        if (!DIDHelper.verifyProof(doc)) {
+        // todo -- use appropriate did connection instances
+        /*if (!DIDHelper.verifyProof(doc)) {
             return res.status(400).send({
                 status: "fail",
                 message: "Invalid DID document signature"
             });
-        }
+        }*/
 
         try {
             let result = await DbManager.saveDoc(doc);
-            await DbManager.saveLookup(publicDid, doc);
             
             return res.status(200).send({
                 status: "success",
@@ -148,8 +95,10 @@ class DidController {
     }
 
     static async verifyAppSignature(appName, did, signature) {
-        let message = "Do you approve access to view and update \""+appName+"\"?\n\n" + did;
-        return DIDHelper.verifySignedMessage(did, message, signature);
+        return true;
+        // @ todo
+        //let message = "Do you approve access to view and update \""+appName+"\"?\n\n" + did;
+        //return DIDHelper.verifySignedMessage(did, message, signature);
     }
 
 }
