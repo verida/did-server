@@ -31,7 +31,7 @@ class DidController {
                 });
             }
         } catch (err) {
-            if (err.reason == "missing") {
+            if (err.reason == 'missing' || err.reason == 'deleted') {
                 return res.status(400).send({
                     status: "fail",
                     data: {
