@@ -1,6 +1,6 @@
 {
   "name": "verida-did-server",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Verida DID Server",
   "main": "src/server.js",
   "scripts": {
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/verida/did-server#readme",
   "dependencies": {
-    "@verida/did-helper": "^0.5.0",
+    "@verida/did-helper": "^0.7.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",

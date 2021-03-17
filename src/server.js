@@ -21,7 +21,6 @@ app.use(router);
 
 DbManager.ensureDb(process.env.DB_DOC_NAME);
 DbManager.ensureDb(process.env.DB_LOOKUP_NAME);
-DbManager.ensureDb(process.env.DB_USERNAME_NAME);
 
 const PORT = 5001;
 app.listen(PORT, () => {
