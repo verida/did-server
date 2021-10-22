@@ -32,8 +32,21 @@ It does not address these user stories:
 
 # Security
 
-- The API verifies the `DID document` signature before writing any document changes to the `DID registry`
-- Each `DID document` is signed (`EcdsaSecp256k1VerificationKey2019`) by the owner via the `proof` property which matches the `proof` format as defined in the [Veriable Credentials standard](https://www.w3.org/TR/vc-data-model/#proofs-signatures).
+- Each `DID document` is hashed using `keccak256` and signed using `secp256k1` (Ethereum hashing and signing algorithms) by the owner via the `proof` property. The format of this proof matches the `proof` format as defined in the [Veriable Credentials standard](https://www.w3.org/TR/vc-data-model/#proofs-signatures)
+- The API verifies the `DID document` proof before writing any document changes to the `DID registry`
+
+An example `proof` property in the `DID Document`:
+
+```
+{
+  "proof": {
+    "type": "EcdsaSecp256k1VerificationKey2019",
+    "verificationMethod": "did:example:123456789abcdefghi?context=context-hash-1#sign",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "<signature>"
+  }
+}
+```
 
 # Key revocation / rotation
 
@@ -45,11 +58,17 @@ See [DID-Core Revocation Semantics](https://www.w3.org/TR/did-core/#revocation-s
 
 It may be possible to implement key rotation in such a way that a chain of previous keys can be formed to deterministically build the currently active private keys linked to the `DID document`.
 
-## How Verida uses this DID registry
+# How Verida uses this DID registry
 
 ## DID document explained
 
 A Verida account (`did:vda`) can be used to access multiple `Application context`'s.
+
+An `Application context` is a human readable string representing the application name (ie: `Verida: Vault`).
+
+@todo: Document the exact format. By convention it should be in the form `<Organisation Name>: <Application Name>`.
+
+**Consideration:** Follow domain name style convention (ie: `application.verida`)
 
 Each `Application context` has multiple `serviceEndpoint` entries, one for each supported endpoint type (`Database`, `Storage`, `Message`, `Notification`). The `Application context` is specified as a query parameter (`context`) in the `id` URI of the `serviceEndpoint`.
 
@@ -58,7 +77,7 @@ Each `Application context` has a public signing key (`assertionMethod`) and a pu
 The `Application context` isn't stored directly. A `Context hash` is generated:
 
 ```
-contextHash = HASH(`did:vda` + `Application context`)
+contextHash = keccak256(`did:vda` + `Application context`)
 ```
 
 ```
@@ -172,4 +191,4 @@ The Verida network is designed to support signed off-chain data being made avail
 
 While the exact mechanics of that is out of scope for this document, what's important is to ensue we utilize a signature scheme that is cheap to execute on popular blockchains.
 
-The Ethereum Virtual Machine (EVM) is currently the most popular blockchain engine and in turn, it's native signature schema (`ECDSA Secp256k1`) is natively supported by most other blockchain virtual machines. For this reason, this `DID Registry` and the Verida `Client SDK` uses the `ECDSA Secp256k1` signature scheme via the `ethers.js` library.
+The Ethereum Virtual Machine (EVM) is currently the most popular blockchain engine and in turn, it's native signature schema (`Secp256k1`) and hashing algorithm (`keccak256`) is natively supported by most other blockchain virtual machines. For this reason, this `DID Registry` and the Verida `Client SDK` uses the `Secp256k1` signature scheme and `keccak256` hashing algorithm via the `ethers.js` library.
