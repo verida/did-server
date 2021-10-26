@@ -18,6 +18,8 @@ export default class DbManager {
         const couch = DbManager.getCouch()
         const db = couch.db.use(process.env.DB_DOC_NAME)
 
+        doc.id = doc.id.toLowerCase()
+
         const data: DbDIDDocument = {
             _id: doc.id,
             doc: doc
@@ -34,7 +36,7 @@ export default class DbManager {
             // Document may not be found, so continue
             if (err.error != 'not_found') {
                 // If an unknown error, then send to error log
-                console.error(err)
+                throw err
             }
         }
 

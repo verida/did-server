@@ -11,7 +11,14 @@ export default class DidController {
      * @param {*} res 
      */
     public static async load(req: Request, res: Response) {
-        const did = String(req.query.did)
+        if (!req.query.did) {
+            return res.status(400).send({
+                status: "fail",
+                message: "No DID specified"
+            })
+        }
+
+        const did = String(req.query.did).toLowerCase()
 
         try {
             const doc: DbDIDDocument = await DbManager.loadDoc(did)
@@ -26,9 +33,7 @@ export default class DidController {
             if (err.reason == "missing") {
                 return res.status(400).send({
                     status: "fail",
-                    data: {
-                        did: "Invalid DID or not found"
-                    }
+                    message: "Invalid DID or not found"
                 })
             }
 
@@ -44,8 +49,6 @@ export default class DidController {
      */
     public static async commit(req: Request, res: Response) {
         const document: DIDDocument = req.body.params.document
-        const publicDid = req.body.params.did.toLowerCase()
-        const signature = req.body.params.signature
 
         //let doc = new DIDDocument(document, document['@context']);
 
@@ -54,7 +57,7 @@ export default class DidController {
         let appName = applicationService.description;
         */
 
-        let validSig = await DidController.verifySignature(document, publicDid, signature)
+        let validSig = await DidController.verifySignature(document)
 
         if (!validSig) {
             return res.status(400).send({
@@ -79,15 +82,15 @@ export default class DidController {
                     document: result.doc
                 }
             });
-        } catch (err) {
+        } catch (err: any) {
             return res.status(400).send({
                 status: "fail",
-                message: err.reason
+                message: "Unknown error committing document"
             });
         }
     }
 
-    public static async verifySignature(doc: DIDDocument, did: string, signature: string): Promise<Boolean> {
+    public static async verifySignature(doc: DIDDocument): Promise<Boolean> {
         /*let message = "Do you approve access to view and update \""+appName+"\"?\n\n" + did;
         return DIDHelper.verifySignedMessage(did, message, signature);*/
         return true
