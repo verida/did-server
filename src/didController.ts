@@ -30,14 +30,18 @@ export default class DidController {
                 }
             });
         } catch (err) {
-            if (err.reason == "missing") {
+            if (err.reason == "missing" || err.reason == "deleted") {
                 return res.status(400).send({
                     status: "fail",
                     message: "Invalid DID or not found"
                 })
             }
 
-            throw err;
+            // @todo log the unknown error
+            return res.status(400).send({
+                status: "fail",
+                message: "Unknown error occurred"
+            })
         }
     }
 
