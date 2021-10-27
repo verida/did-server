@@ -4,9 +4,10 @@
   "description": "Verida DID Server",
   "main": "dist/server.js",
   "scripts": {
-    "build": "tsc",
+    "dev": "nodemon src/server.js",
+    "build": "rm -rf dist && tsc",
     "prestart": "yarn build",
-    "start": "node ."
+    "start": "node dist/server.js"
   },
   "repository": {
     "type": "git",
