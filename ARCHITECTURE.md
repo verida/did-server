@@ -32,8 +32,9 @@ It does not address these user stories:
 
 # Security
 
-- Each `DID document` is hashed using `keccak256` and signed using `secp256k1` (Ethereum hashing and signing algorithms) by the owner via the `proof` property. The format of this proof matches the `proof` format as defined in the [Veriable Credentials standard](https://www.w3.org/TR/vc-data-model/#proofs-signatures)
+- Each `DID document` is converted to a string (via `JSON.stringify`), hashed using `keccak256` and signed using `secp256k1` (Ethereum hashing and signing algorithms) by the `DID document` controller via the `proof` property. The format of this proof matches the `proof` format as defined in the [Veriable Credentials standard](https://www.w3.org/TR/vc-data-model/#proofs-signatures)
 - The API verifies the `DID document` proof before writing any document changes to the `DID registry`
+- The `proof` remains on the `DID document` for any third party to verify
 
 An example `proof` property in the `DID Document`:
 
@@ -41,7 +42,7 @@ An example `proof` property in the `DID Document`:
 {
   "proof": {
     "type": "EcdsaSecp256k1VerificationKey2019",
-    "verificationMethod": "did:example:123456789abcdefghi?context=context-hash-1#sign",
+    "verificationMethod": "did:example:123456789abcdefghi",
     "proofPurpose": "assertionMethod",
     "proofValue": "<signature>"
   }
@@ -124,7 +125,14 @@ contextHash = keccak256(`did:vda` + `Application context`)
   
   "keyAgreement": [
       "did:example:123456789abcdefghi?context=context-hash-1#asym"
-  ]
+  ],
+
+  "proof": {
+    "type": "EcdsaSecp256k1VerificationKey2019",
+    "verificationMethod": "did:example:123456789abcdefghi",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "<signature>"
+  }
 
 }
 ```
