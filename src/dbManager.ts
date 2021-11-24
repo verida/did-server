@@ -1,7 +1,9 @@
 import Nano from 'nano'
-import crypto from 'crypto'
 import { DIDDocument } from 'did-resolver'
 import { DbDIDDocument } from './interfaces'
+
+import dotenv from 'dotenv'
+dotenv.config()
 
 export default class DbManager {
 
@@ -70,9 +72,9 @@ export default class DbManager {
         
         try {
             await couch.db.create(dbName)
-            console.log("Created database: " + dbName)
+            console.log(`Created database: ${dbName}`)
         } catch (err) {
-            console.log("Database existed: " + dbName)
+            console.log(`Database existed: ${dbName}`)
         }
 
         return true
@@ -99,7 +101,6 @@ export default class DbManager {
 
     public static buildDsn(username: string, password: string) {
         let env = process.env
-        return env.DB_PROTOCOL + "://" + username + ":" + password + "@" + env.DB_HOST + ":" + env.DB_PORT
+        return `${env.DB_PROTOCOL}://${username}:${password}@${env.DB_HOST}:${env.DB_PORT}`
     }
-
 }

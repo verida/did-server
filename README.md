@@ -4,6 +4,8 @@
 
 ## Usage
 
-```
-npm run start
+```bash
+cp .env.local .env
+yarn install
+yarn run start
 ```

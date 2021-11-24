@@ -3,3 +3,4 @@ coverage
 .env.dev
 .env
 dist/
+yarn-error.log
