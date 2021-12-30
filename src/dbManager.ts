@@ -1,5 +1,4 @@
 import Nano from 'nano'
-import crypto from 'crypto'
 import { DIDDocument } from 'did-resolver'
 import { DbDIDDocument } from './interfaces'
 
