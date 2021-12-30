@@ -2,6 +2,8 @@
 
 @todo
 
+See [ARCHITECTURE.md](https://github.com/verida/did-server/blob/main/ARCHITECTURE.md) for some documentation. 
+
 ## Usage
 
 ```
