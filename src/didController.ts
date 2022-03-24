@@ -52,46 +52,56 @@ export default class DidController {
      * @param {*} res 
      */
     public static async commit(req: Request, res: Response) {
-        const document: DIDDocument = req.body.params.document
-
-        //let doc = new DIDDocument(document, document['@context']);
-
-        /*
-        let applicationService = doc.service.find(entry => entry.type.includes("verida.Application"));
-        let appName = applicationService.description;
-        */
-
-        let validSig = await DidController.verifySignature(document)
-
-        if (!validSig) {
-            return res.status(400).send({
-                status: "fail",
-                message: "Invalid DID consent signature"
-            });
-        }
-
-        /*if (!DIDHelper.verifyProof(doc)) {
-            return res.status(400).send({
-                status: "fail",
-                message: "Invalid DID document signature"
-            });
-        }*/
-
         try {
-            const result = await DbManager.saveDoc(document)
-            
-            return res.status(200).send({
-                status: "success",
-                data: {
-                    document: result.doc
-                }
-            });
-        } catch (err: any) {
-            return res.status(400).send({
-                status: "fail",
-                message: "Unknown error committing document"
-            });
+            const document: DIDDocument = req.body.params.document;
+
+            //let doc = new DIDDocument(document, document['@context']);
+    
+            /*
+            let applicationService = doc.service.find(entry => entry.type.includes("verida.Application"));
+            let appName = applicationService.description;
+            */
+    
+            let validSig = await DidController.verifySignature(document)
+    
+            if (!validSig) {
+                return res.status(400).send({
+                    status: "fail",
+                    message: "Invalid DID consent signature"
+                });
+            }
+    
+            /*if (!DIDHelper.verifyProof(doc)) {
+                return res.status(400).send({
+                    status: "fail",
+                    message: "Invalid DID document signature"
+                });
+            }*/
+    
+            try {            
+                const result = await DbManager.saveDoc(document)
+                
+                return res.status(200).send({
+                    status: "success",
+                    data: {
+                        document: result.doc
+                    }
+                });
+            } catch (err: any) {
+                console.log(err);
+                return res.status(400).send({
+                    status: "fail",
+                    message: "Unknown error committing document"
+                });
+            }
+        } catch (err:any) {
+            console.log(err);
+            return res.status(500).send({
+                status: "Internal Server Error",
+                message: "Unknown error"
+            });            
         }
+
     }
 
     public static async verifySignature(doc: DIDDocument): Promise<Boolean> {

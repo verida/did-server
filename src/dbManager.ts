@@ -7,7 +7,7 @@ dotenv.config()
 
 export default class DbManager {
 
-    static _couchDb: Nano.ServerScope
+    static _couchDb: Nano.ServerScope = undefined;
 
     /**
      * Save a DID Document to the database.
@@ -19,6 +19,7 @@ export default class DbManager {
     public static async saveDoc(doc: DIDDocument): Promise<DbDIDDocument> {
         const couch = DbManager.getCouch()
         const db = couch.db.use(process.env.DB_DOC_NAME)
+
 
         doc.id = doc.id.toLowerCase()
 

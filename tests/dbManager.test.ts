@@ -1,4 +1,4 @@
-import DbManager from '../dbManager'
+import DbManager from '../src/dbManager'
 
 it('should create dns from username and password', () => {
     const dns = DbManager.buildDsn('root', 'password')
