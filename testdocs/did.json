@@ -1,0 +1,53 @@
+{
+  "params": {
+    "document": {
+      "id": "did:vda:0x028078d84f157e6421d9cf23ea3df271ca76feb2",
+      "controller": "did:vda:0x028078d84f157e6421d9cf23ea3df271ca76feb2",
+      "assertionMethod": [
+        "did:vda:0x028078d84f157e6421d9cf23ea3df271ca76feb2",
+        "did:vda:0x028078d84f157e6421d9cf23ea3df271ca76feb2?context=0x154842dc95dd18269ce85fef68826558d382b9c0718b689dce0d778fd0be3fed#sign"
+      ],
+      "verificationMethod": [
+        {
+          "id": "did:vda:0x028078d84f157e6421d9cf23ea3df271ca76feb2",
+          "type": "EcdsaSecp256k1VerificationKey2019",
+          "controller": "did:vda:0x028078d84f157e6421d9cf23ea3df271ca76feb2",
+          "publicKeyHex": "0x0449d7d394ce2d6c8ad93ce5652d8e898820a07751df0982a0164e07c61f7a9a98c68361ee8801346e4857afba2139cfbfb56b5dd9e0e75c19c1d32efb60ea5cbc"
+        },
+        {
+          "id": "did:vda:0x028078d84f157e6421d9cf23ea3df271ca76feb2?context=0x154842dc95dd18269ce85fef68826558d382b9c0718b689dce0d778fd0be3fed#sign",
+          "type": "EcdsaSecp256k1VerificationKey2019",
+          "controller": "did:vda:0x028078d84f157e6421d9cf23ea3df271ca76feb2",
+          "publicKeyHex": "0x037bcc149b1c424d52268e8bcaaee87a7acdae3cd18ef0b89156c6de83bb61eee8"
+        },
+        {
+          "id": "did:vda:0x028078d84f157e6421d9cf23ea3df271ca76feb2?context=0x154842dc95dd18269ce85fef68826558d382b9c0718b689dce0d778fd0be3fed#asym",
+          "type": "Curve25519EncryptionPublicKey",
+          "controller": "did:vda:0x028078d84f157e6421d9cf23ea3df271ca76feb2",
+          "publicKeyHex": "0x4a570659676d7e359528a2db1575fe64798f52e481cc73bae5f30dc4cccbab5d"
+        }
+      ],
+      "service": [
+        {
+          "id": "did:vda:0x028078d84f157e6421d9cf23ea3df271ca76feb2?context=0x154842dc95dd18269ce85fef68826558d382b9c0718b689dce0d778fd0be3fed#database",
+          "type": "VeridaDatabase",
+          "serviceEndpoint": "https://db.testnet.verida.io:5002/"
+        },
+        {
+          "id": "did:vda:0x028078d84f157e6421d9cf23ea3df271ca76feb2?context=0x154842dc95dd18269ce85fef68826558d382b9c0718b689dce0d778fd0be3fed#messaging",
+          "type": "VeridaMessage",
+          "serviceEndpoint": "https://db.testnet.verida.io:5002/"
+        }
+      ],
+      "keyAgreement": [
+        "did:vda:0x028078d84f157e6421d9cf23ea3df271ca76feb2?context=0x154842dc95dd18269ce85fef68826558d382b9c0718b689dce0d778fd0be3fed#asym"
+      ],
+      "proof": {
+        "type": "EcdsaSecp256k1VerificationKey2019",
+        "verificationMethod": "did:vda:0x028078d84f157e6421d9cf23ea3df271ca76feb2",
+        "proofPurpose": "assertionMethod",
+        "proofValue": "0x21819cd88c64e39fcc9141d5550b5e8473ea1c04820d8db095d5760d9e10fb987255df00901eabec8dc75f08094d4ed77e4d4d70e9a93325dc8d4c6e1173e01e1c"
+      }
+    }
+  }
+}
