@@ -2,9 +2,12 @@ import Nano from 'nano'
 import { DIDDocument } from 'did-resolver'
 import { DbDIDDocument } from './interfaces'
 
+import dotenv from 'dotenv'
+dotenv.config()
+
 export default class DbManager {
 
-    static _couchDb: Nano.ServerScope
+    static _couchDb: Nano.ServerScope = undefined;
 
     /**
      * Save a DID Document to the database.
@@ -16,6 +19,7 @@ export default class DbManager {
     public static async saveDoc(doc: DIDDocument): Promise<DbDIDDocument> {
         const couch = DbManager.getCouch()
         const db = couch.db.use(process.env.DB_DOC_NAME)
+
 
         doc.id = doc.id.toLowerCase()
 
@@ -69,9 +73,9 @@ export default class DbManager {
         
         try {
             await couch.db.create(dbName)
-            console.log("Created database: " + dbName)
+            console.log(`Created database: ${dbName}`)
         } catch (err) {
-            console.log("Database existed: " + dbName)
+            console.log(`Database existed: ${dbName}`)
         }
 
         return true
@@ -98,7 +102,6 @@ export default class DbManager {
 
     public static buildDsn(username: string, password: string) {
         let env = process.env
-        return env.DB_PROTOCOL + "://" + username + ":" + password + "@" + env.DB_HOST + ":" + env.DB_PORT
+        return `${env.DB_PROTOCOL}://${username}:${password}@${env.DB_HOST}:${env.DB_PORT}`
     }
-
 }

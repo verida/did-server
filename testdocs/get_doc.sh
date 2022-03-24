@@ -1,0 +1,1 @@
+curl http://localhost:5001/load\?did\=did:vda:0x028078d84f157e6421d9cf23ea3df271ca76feb2
