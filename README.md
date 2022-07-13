@@ -1,4 +1,4 @@
-# Verid DID Server
+# Verida DID Server
 
 @todo
 
